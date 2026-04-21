@@ -10,7 +10,8 @@ int open_clientfd(char *hostname, char *port)
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_ADDRCONFIG;
   hints.ai_flags = AI_NUMERICSERV;
-
+  Getaddrinfo(*hostname, *port, &hints, &listp);
+  
   for(p=listp;p;p=p->ai_next) {
     if (clientfd = socket(p->ai_family,p->ai_socktype,p->ai_protocol) == -1) {
       continue;
