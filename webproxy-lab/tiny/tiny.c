@@ -126,11 +126,17 @@ int parse_uri(char *uri, char *filename, char *cgiargs) {
         }
         return 1;
     } else { /*Dynamic content*/
-        strcpy(cgiargs, "");
+        ptr = index(uri, '?');
+        if (ptr) {
+            strcpy(cgiargs, ptr + 1);
+            *ptr = '\0';
+        } else {
+            strcpy(cgiargs, "");
+        }
+        strcpy(filename, ".");
+        strcat(filename, uri);
+        return 0;
     }
-    strcpy(filename, ".");
-    strcpy(filename, uri);
-    return 0;
 }
 
 void serve_static(int fd, char *filename, int filesize, char *method) {
@@ -149,7 +155,7 @@ void serve_static(int fd, char *filename, int filesize, char *method) {
     printf("%s", buf);
     /* Send response bodyt to client */
     srcfd = Open(filename, O_RDONLY, 0);
-    if (strcasecmp(method, "GET")) {
+    if (!strcasecmp(method, "GET")) {
         // srcp = Mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0); //
         srcp = malloc(filesize);
         Rio_readn(srcfd, srcp, filesize);
@@ -158,9 +164,9 @@ void serve_static(int fd, char *filename, int filesize, char *method) {
         free(srcp);
         // Munmap(srcp, filesize);
     }
-    if (strcasecmp(method, "HEAD")) {
+    if (!strcasecmp(method, "HEAD")) {
         // srcp = Mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0); //
-        Rio_writen(srcfd,buf,strlen(buf));
+        Rio_writen(fd, buf, strlen(buf));
         Close(srcfd);
         // Munmap(srcp, filesize);
     }
@@ -198,7 +204,6 @@ void serve_dynamic(int fd, char *filename, char *cgiargs) {
     Rio_writen(fd, buf, strlen(buf));
     sprintf(buf, "Server: Tiny Web Server\r\n");
     Rio_writen(fd, buf, strlen(buf));
-
     if (Fork() == 0) { /*Child*/
         /* Real server would set all CGI vars here*/
         setenv("QUERY_STRING", cgiargs, 1);
