@@ -1,5 +1,5 @@
 #include <stdio.h>
 
-void printB() {
-  printf("B");
+void printA() {
+  printf("C");
 }
