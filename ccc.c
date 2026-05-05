@@ -2,19 +2,38 @@
 #include "testb.c"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
+size_t strlcpy (char *dst, const char *src, size_t size);
 
 int main() {
-    // char *asd;
-    // asd = "hello world";
-    // while (strchr(' ',asd)!=NULL) {
-    //     printf("%s\n", asd);
-    //     asd++;
-    // }
-    // printf("%s\n", asd);
-    long x = 0x47480000-0x4747ffc0;
-    printf("%p",x);
+	unsigned long addr_f = 0x47480000;
+	unsigned long addr_s = 0x4747fffc;
+ 
+
+	printf("%p",addr_f - addr_s);
 }
 
+int main_s() {
+	int *asd;
+	int value;
+	*asd = value;
+	printf("%d",asd);
+}
+
+int main_t() {
+	char data[] = "args-single onearg";
+	char *delimiter = " ";
+	char *save_ptr;
+	char *token = strtok_r(data,delimiter, &save_ptr);
+	printf("%s\n",token);
+	while (((token = strtok_r(NULL, delimiter, &save_ptr)) != NULL)) {
+		printf("%s\n",token);
+	}
+	if (token == NULL) {
+		printf("NULL");
+	}
+}
 
 
 char *
@@ -36,14 +55,16 @@ strtok_r (char *s, const char *delimiters, char **save_ptr) {
 			*save_ptr = s;
 			return NULL;
 		}
-    s++;
+
+		s++;
 	}
+
 	/* Skip any non-DELIMITERS up to the end of the string. */
 	token = s;
 	while (strchr (delimiters, *s) == NULL)
 		s++;
 	if (*s != '\0') {
-		*s = 'P';
+		*s = '\0';
 		*save_ptr = s + 1;
 	} else
 		*save_ptr = s;
