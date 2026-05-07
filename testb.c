@@ -1,5 +1,3 @@
 #include <stdio.h>
 
-void printB() {
-  printf("C");
-}
+void printB() { printf("C"); }
