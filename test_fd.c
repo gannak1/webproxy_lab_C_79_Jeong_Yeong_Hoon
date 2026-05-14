@@ -17,4 +17,5 @@ bool page_less(const struct hash_elem *a_, const struct hash_elem *b_, void *aux
     const struct page *b = hash_entry(b_, struct page, hash_elem);
 
     return a->addr < b->addr;
+    ;
 }
