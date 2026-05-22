@@ -1,21 +1,33 @@
-#include "hash.h"
-#include "list.c"
-#include "list.h"
-#include "testa.c"
-#include "testb.c"
+#include "bitmap.h"
+// #include "hash.h"
+// #include "list.c"
+// #include "list.h"
+// #include "testa.c"
+// #include "testb.c"
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+// #include <stdlib.h>
+// #include <string.h>
 
+struct bitmap *swap_table;
 int main() {
-    struct hash spt =
-        hash_init(struct hash * h, hash_hash_func * hash, hash_less_func * less, void *aux);
-}
+    int total_swap_count = 100;
+    swap_table = bitmap_create(total_swap_count * 8);
+    if (swap_table == NULL) {
+        return -1;
+    }
 
-bool page_less(const struct hash_elem *a_, const struct hash_elem *b_, void *aux UNUSED) {
-    const struct page *a = hash_entry(a_, struct page, hash_elem);
-    const struct page *b = hash_entry(b_, struct page, hash_elem);
+    // swap_
+    int swap_location = 15;
 
-    return a->addr < b->addr;
-    ;
+    for (int i = 0; i < 8; i++) {
+        bitmap_set(swap_table, swap_location * 8 + i, 1);
+    }
+
+    printf("data%d : %d\n", -1, bitmap_test(swap_table, swap_location * 8 - 1));
+    for (int i = 0; i < 8; i++) {
+        int data = bitmap_test(swap_table, swap_location * 8 + i);
+        printf("data%d : %d\n", i, data);
+    }
+    printf("data%d : %d\n", 9, bitmap_test(swap_table, (swap_location + 1) * 8 + 1));
+    bitmap_destroy(swap_table);
 }
