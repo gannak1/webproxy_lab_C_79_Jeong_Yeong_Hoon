@@ -30,4 +30,4 @@ int main() {
     }
     printf("data%d : %d\n", 9, bitmap_test(swap_table, (swap_location + 1) * 8 + 1));
     bitmap_destroy(swap_table);
-}
+} 
